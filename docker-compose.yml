@@ -1,0 +1,27 @@
+# Specify the version of the Docker Compose file format.
+version: "3.8"
+
+# Define the services that will be run by Docker Compose.
+services:
+  # The name of the service.
+  backend:
+    # Build the Docker image using the Dockerfile in the current directory (`.`).
+    build: .
+    
+    container_name: backend
+
+    # The command to run inside the container.
+    command: python manage.py runserver 0.0.0.0:8000
+
+    # این دو دایرکتوری رو بهم لینک کنه تا تغییراتی که توی کر انجام میشه توی اپ نیز اعمال بشه
+    volumes:
+      - ./core:/app
+
+    # Map port 8080 on your host machine to port 8080 in the container.
+    # This allows you to access the Django application on `localhost:8080`.
+    ports:
+      - "8000:8000"
+
+    # Set environment variables for the container.
+    environment:
+      - DEBUG=True
