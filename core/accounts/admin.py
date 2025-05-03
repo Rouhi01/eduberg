@@ -1,9 +1,14 @@
 from django.contrib import admin
-from .models import User
+from .models import User, Profile
 from django.contrib.auth.admin import UserAdmin as BaseAdmin
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
 
 class UserAdmin(BaseAdmin):
     model = User
+    inlines = [ProfileInline]
     list_display = ("email", "is_staff", "is_active",)
     list_filter = ("email", "is_staff", "is_active",)
     fieldsets = (
