@@ -20,5 +20,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
     
-# TODO creating Profile model
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=80, blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    profile_img = models.ImageField(upload_to='profile_imgs/', blank=True, null=True, default='')
+    background_img = models.ImageField(upload_to='background_imgs/', blank=True, null=True, default='')
+    bio = models.TextField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.email
     
