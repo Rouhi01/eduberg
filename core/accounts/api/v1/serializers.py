@@ -5,10 +5,13 @@ from django.core import exceptions
 
 
 class SignupSerializer(serializers.ModelSerializer):
-    password1 = serializers.CharField()
+    password1 = serializers.CharField(write_only=True)
     class Meta:
         model = User
         fields = ['email', 'password', 'password1']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
     def validate(self, attrs):
         if attrs.get('password') != attrs.get('password1'):
@@ -24,5 +27,5 @@ class SignupSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
         
     def create(self, validated_data):
-        validated_data.pop('password1', None)
-        return super().create(validated_data)
+        validated_data.pop('password1')
+        return User.objects.create_user(**validated_data)
