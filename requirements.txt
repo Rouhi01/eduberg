@@ -2,3 +2,4 @@ Django==5.0.1
 python-decouple
 pillow
 djangorestframework
+drf-yasg
