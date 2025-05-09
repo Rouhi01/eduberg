@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import User
+from accounts.models import User, Profile
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 
@@ -49,3 +49,13 @@ class ChangePassSerializer(serializers.Serializer):
             })
         
         return attrs
+    
+
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email', read_only=True)
+    class Meta:
+        model=Profile
+        fields = [
+            'full_name', 'phone_number', 'profile_img', 
+            'background_img', 'bio', 'email'
+        ]
