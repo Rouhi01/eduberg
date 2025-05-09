@@ -1,11 +1,13 @@
 from rest_framework.views import APIView, Response
 from rest_framework import generics, status
-from .serializers import SignupSerializer, ChangePassSerializer
+from .serializers import SignupSerializer, ChangePassSerializer, ProfileSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import (
     OutstandingToken, BlacklistedToken
 )
+from accounts.models import Profile
+from django.shortcuts import get_object_or_404
 
 
 
@@ -64,4 +66,12 @@ class ChangePassApiView(generics.GenericAPIView):
             'message': 'Password updated successfully',
         }
         return Response(response)
-    
+
+class ProfileApiView(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        obj = get_object_or_404(self.queryset, user=self.request.user)
+        return obj
