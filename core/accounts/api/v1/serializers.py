@@ -29,3 +29,23 @@ class SignupSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('password1')
         return User.objects.create_user(**validated_data)
+    
+
+class ChangePassSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    new_password_confirm = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs.get('new_password') != attrs.get('new_password_confirm'):
+            raise serializers.ValidationError({
+                'detail':'Passwords do not match.'
+            })
+        try:
+            validate_password(attrs.get('new_password'))
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({
+                'new password': list(e.messages)
+            })
+        
+        return attrs
